@@ -1,13 +1,22 @@
 import mido
 import time
 
-outport = mido.open_output('IAC Driver allwin_iac_bus')
+outport = { 'default': mido.open_output('IAC Driver allwin_iac_bus'),
+            'sensors': mido.open_output('IAC Driver sensors_iac'),
+            'santoor': mido.open_output('IAC Driver santoor_iac'),
+            'pad': mido.open_output('IAC Driver pad_iac'),
+            'strings': mido.open_output('IAC Driver strings_iac')
+            }
 
-def send_midi(notes, port = outport, delay = 0):
+
+def send_midi(notes, port = outport['default'], delay = 0.5):
     for note in notes:
         print(note)
         port.send(note)
+        print("delay------------------------------------>>>>>>>>>>>>>>>")
+        print(delay)
         time.sleep(0.5)
+
 
 def generate_message(note = 60, velocity = 80, time = 0, channel = 1):
     return [
@@ -15,15 +24,24 @@ def generate_message(note = 60, velocity = 80, time = 0, channel = 1):
             mido.Message('note_off', channel = channel, note = note, velocity = velocity, time = 0)
             ]
 
-def send_pitch(notes, channel = 1):
+def send_pitch(notes, channel = 1, last_note = 0):
     print(notes)
     print(channel)
     for note in notes:
-        send_midi(generate_message(channel = channel, note = note['pitch'], velocity = note['velocity']))
+        print('LAST NOTE')
+        print(last_note)
+        delay = 0.5
+        if('time' in note):
+            delay = note['time']
 
-    return "success"
+        if(last_note != note['pitch']):
+            last_note = note['pitch']
+            send_midi(generate_message(channel = channel, note = note['pitch'], velocity = note['velocity']))
+            return last_note
 
-send_midi(generate_message(60, 60, 1, channel = 2), outport, delay = 1000)
+    return last_note
+
+send_midi(generate_message(60, 60, 1, channel = 2), outport['default'], delay = 1)
 
 # def get_ctl_msgs(param, value):
 #         if param == 'BEND_RANGE':
