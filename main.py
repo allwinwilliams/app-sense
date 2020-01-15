@@ -1,7 +1,7 @@
 from flask import Flask
 from flask import request
 import json
-from generate_notes import process
+from generate_notes import process, sensor_process
 from midi_connection import send_pitch
 
 
@@ -65,12 +65,15 @@ def sensor():
 
 @app.route('/sensor', methods = ['POST'])
 def sensor_nodemcu():
+    global last_note
     print("REQUEST::")
-    print (request.is_json)
     json_data = request.get_json()
-    print (json_data.is_json)
-    print("FORM::")
-    print (request.form)
+    print (json_data)
+    notes_data = sensor_process(json_data)
+
+    if(notes_data):
+        # last_note = send_pitch(notes_data)
+        pass
 
     return "Ok"
 

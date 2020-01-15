@@ -24,22 +24,22 @@ def generate_message(note = 60, velocity = 80, time = 0, channel = 1):
             mido.Message('note_off', channel = channel, note = note, velocity = velocity, time = 0)
             ]
 
-def send_pitch(notes, channel = 1, last_note = 0):
+def send_pitch(notes, channel = 1, last_pitch = 0):
     print(notes)
     print(channel)
     for note in notes:
         print('LAST NOTE')
-        print(last_note)
+        print(last_pitch)
         delay = 0.5
         if('time' in note):
             delay = note['time']
 
-        if(last_note != note['pitch']):
-            last_note = note['pitch']
+        if(last_pitch != note['pitch']):
+            last_pitch = note['pitch']
             send_midi(generate_message(channel = channel, note = note['pitch'], velocity = note['velocity']))
-            return last_note
+            return last_pitch
 
-    return last_note
+    return last_pitch
 
 send_midi(generate_message(60, 60, 1, channel = 2), outport['default'], delay = 1)
 

@@ -121,3 +121,21 @@ def normalize(value, max_value = 44, min_value = 5):
     calculated_value = calculated_value * (max_value - min_value) + min_value
     calculated_value = round(calculated_value)
     return calculated_value
+
+def sensor_process(data):
+    result = []
+
+    acceleration = data['data']['accelerometer'];
+    x = normalize(acceleration['x'], max_value = 90, min_value = 25)
+    y = normalize(acceleration['y'], max_value = 90, min_value = 25)
+    z = normalize(acceleration['z'], max_value = 90, min_value = 25)
+    velocity = combine(x, y, z)
+
+    gyroscope = data['data']['gyroscope'];
+    x = normalize(gyroscope['x'])
+    y = normalize(gyroscope['y'])
+    z = normalize(gyroscope['z'])
+    value = combine(x, y, z)
+    result.append({'pitch': value, 'velocity': velocity, 'time': 0.4})
+
+    return result
