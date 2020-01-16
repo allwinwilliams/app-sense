@@ -126,16 +126,18 @@ def sensor_process(data):
     result = []
 
     acceleration = data['data']['accelerometer'];
-    x = normalize(acceleration['x'], max_value = 90, min_value = 25)
-    y = normalize(acceleration['y'], max_value = 90, min_value = 25)
-    z = normalize(acceleration['z'], max_value = 90, min_value = 25)
-    velocity = combine(x, y, z)
+    combined = combine(acceleration['x'], acceleration['y'], acceleration['z'])
+    print("SENSOR  ******************************** ")
+    print("ACCELERATION")
+    print(combined)
+    if combined > 20000:
+        return True
 
-    gyroscope = data['data']['gyroscope'];
-    x = normalize(gyroscope['x'])
-    y = normalize(gyroscope['y'])
-    z = normalize(gyroscope['z'])
-    value = combine(x, y, z)
-    result.append({'pitch': value, 'velocity': velocity, 'time': 0.4})
+    # gyroscope = data['data']['gyroscope'];
+    # x = normalize(gyroscope['x'])
+    # y = normalize(gyroscope['y'])
+    # z = normalize(gyroscope['z'])
+    # value = combine(x, y, z)
+    # result.append({'pitch': value, 'velocity': velocity, 'time': 0.4})
 
-    return result
+    return False

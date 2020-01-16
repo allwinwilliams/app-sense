@@ -4,10 +4,12 @@ import json
 from generate_notes import process, sensor_process
 from midi_connection import send_pitch
 
+import vlc
+import time
 
 last_note = -1
 
-app = Flask(__name__)
+app = Flask(__name__, static_url_path='')
 
 @app.route('/hello')
 def hello():
@@ -57,7 +59,7 @@ def sensor():
     print(str(notes_data))
 
     if(notes_data):
-        last_note = send_pitch(notes_data, channel, last_note)
+        last_note = send_pitch(notes_data, channel, last_note, type = type)
 
     return str(notes_data) + str(channel)
 
@@ -69,11 +71,14 @@ def sensor_nodemcu():
     print("REQUEST::")
     json_data = request.get_json()
     print (json_data)
-    notes_data = sensor_process(json_data)
+    sensor_enable = sensor_process(json_data)
 
-    if(notes_data):
-        # last_note = send_pitch(notes_data)
-        pass
+    if(sensor_enable):
+
+        p = vlc.MediaPlayer("./sounds/koel.wav")
+        p.play()
+        time.sleep(2)
+        p.stop()
 
     return "Ok"
 

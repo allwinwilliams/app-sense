@@ -5,7 +5,9 @@ outport = { 'default': mido.open_output('IAC Driver allwin_iac_bus'),
             'sensors': mido.open_output('IAC Driver sensors_iac'),
             'santoor': mido.open_output('IAC Driver santoor_iac'),
             'pad': mido.open_output('IAC Driver pad_iac'),
-            'strings': mido.open_output('IAC Driver strings_iac')
+            'piano': mido.open_output('IAC Driver piano_iac'),
+            'strings': mido.open_output('IAC Driver strings_iac'),
+            'drums': mido.open_output('IAC Driver drums_iac')
             }
 
 
@@ -24,7 +26,7 @@ def generate_message(note = 60, velocity = 80, time = 0, channel = 1):
             mido.Message('note_off', channel = channel, note = note, velocity = velocity, time = 0)
             ]
 
-def send_pitch(notes, channel = 1, last_pitch = 0):
+def send_pitch(notes, channel = 1, last_pitch = 0, type = 'pad'):
     print(notes)
     print(channel)
     for note in notes:
@@ -36,7 +38,7 @@ def send_pitch(notes, channel = 1, last_pitch = 0):
 
         if(last_pitch != note['pitch']):
             last_pitch = note['pitch']
-            send_midi(generate_message(channel = channel, note = note['pitch'], velocity = note['velocity']))
+            send_midi(generate_message(channel = channel, note = note['pitch'], velocity = note['velocity']), port = outport[type])
             return last_pitch
 
     return last_pitch
