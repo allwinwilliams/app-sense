@@ -38,12 +38,11 @@ def send_pitch(notes, channel = 1, last_pitch = 0, type = 'pad'):
 
         if(last_pitch != note['pitch']):
             last_pitch = note['pitch']
-            send_midi(generate_message(channel = channel, note = note['pitch'], velocity = note['velocity']), port = outport[type])
+            # send_midi(generate_message(channel = channel, note = note['pitch'], velocity = note['velocity']), port = outport[type])
+            send_midi(generate_message(channel = channel, note = note['pitch'], velocity = note['velocity']))
             return last_pitch
 
     return last_pitch
-
-send_midi(generate_message(60, 60, 1, channel = 2), outport['default'], delay = 1)
 
 # def get_ctl_msgs(param, value):
 #         if param == 'BEND_RANGE':

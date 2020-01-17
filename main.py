@@ -3,9 +3,8 @@ from flask import request
 import json
 from generate_notes import process, sensor_process
 from midi_connection import send_pitch
+from play_sound import play
 
-import vlc
-import time
 
 last_note = -1
 
@@ -72,13 +71,8 @@ def sensor_nodemcu():
     json_data = request.get_json()
     print (json_data)
     sensor_enable = sensor_process(json_data)
-
-    if(sensor_enable):
-
-        p = vlc.MediaPlayer("./sounds/koel.wav")
-        p.play()
-        time.sleep(2)
-        p.stop()
+    if sensor_enable > 0:
+        play(sensor_enable)
 
     return "Ok"
 

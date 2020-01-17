@@ -114,7 +114,7 @@ def calculate_velocity(x, y, z):
 def combine(x, y, z):
     return int(math.sqrt(x * x + y * y + z * z))
 
-def normalize(value, max_value = 44, min_value = 5):
+def normalize(value, max_value = 44, min_value = 10):
     # return abs(1/value)
     calculated_value = abs(value)
     calculated_value = calculated_value / (1 + calculated_value)
@@ -130,8 +130,11 @@ def sensor_process(data):
     print("SENSOR  ******************************** ")
     print("ACCELERATION")
     print(combined)
-    if combined > 20000:
-        return True
+    if combined > 18000:
+        return 2
+
+    if combined > 19000:
+        return 1
 
     # gyroscope = data['data']['gyroscope'];
     # x = normalize(gyroscope['x'])
@@ -140,4 +143,4 @@ def sensor_process(data):
     # value = combine(x, y, z)
     # result.append({'pitch': value, 'velocity': velocity, 'time': 0.4})
 
-    return False
+    return 0
